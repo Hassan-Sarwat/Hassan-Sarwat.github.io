@@ -1,16 +1,6 @@
 ---
-title: Hi, I'm Hassan.
-author: Hassan Sarwat
-pubDatetime: 2025-06-01T10:00:00Z
-slug: introduction
-featured: true
-draft: false
-tags:
-  - AI Research
-  - NLP
-  - Multimodal Learning
-description:
-  "Senior Data Scientist and AI Researcher specializing in Multimodal Deep Learning, NLP, and Legal Tech."
+layout: ../layouts/AboutLayout.astro
+title: "About"
 ---
 
 I am a **Machine Learning Researcher** and **Senior Data Scientist** based in **Munich, Germany**.
