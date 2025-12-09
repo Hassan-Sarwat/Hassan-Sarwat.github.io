@@ -1,37 +1,42 @@
 ---
-layout: ../layouts/AboutLayout.astro
-title: "About"
+title: Hi, I'm Hassan.
+author: Hassan Sarwat
+pubDatetime: 2025-06-01T10:00:00Z
+slug: introduction
+featured: true
+draft: false
+tags:
+  - AI Research
+  - NLP
+  - Multimodal Learning
+description:
+  "Senior Data Scientist and AI Researcher specializing in Multimodal Deep Learning, NLP, and Legal Tech."
 ---
 
-AstroPaper is a minimal, accessible and SEO-friendly blog theme built with [Astro](https://astro.build/) and [Tailwind CSS](https://tailwindcss.com/).
+I am a **Machine Learning Researcher** and **Senior Data Scientist** based in **Munich, Germany**.
 
-![Astro Paper](public/astropaper-og.jpg)
+Currently, I am completing my **M.Sc. in Data Engineering and Analytics** at the **Technical University of Munich (TUM)**, while researching **Multimodal Deep Learning** and **Uncertainty Quantification** at **LIS Lab** (Marseille).
 
-AstroPaper provides a solid foundation for blogs, or even portfolios\_ with full markdown support, built-in dark mode, and a clean layout that works out-of-the-box.
+My work sits at the intersection of **rigorous academic research** and **scalable engineering**. I don't just build models; I deploy them to solve real-world efficiency problems.
 
-The blog posts in this theme also serve as guides, docs or example articles\_ making AstroPaper a flexible starting point for your next content-driven site.
+### 🔬 Research Focus
+I specialize in **Natural Language Processing (NLP)** and **Legal Tech**. My research has been published in top-tier conferences like **COLING** and **LREC-COLING**, accumulating over **40+ citations** to date.
 
-## Features
+* **Multimodal Learning:** Developing novel fusion methods to estimate uncertainty in deep learning models.
+* **Legal NLP:** Achieved state-of-the-art results on the BSARD dataset (Recall@500 to 91.3%) using Graph Neural Networks (GNNs).
+* **Disentanglement:** Leveraging information-theoretic approaches (InfoNCE, VAEs) to disentangle data modalities.
 
-AstroPaper comes with a set of useful features that make content publishing easy and effective:
+### 🛠️ Engineering Experience
+Prior to my Master's, I spent 4+ years as a Data Scientist in fast-paced tech environments:
 
-- SEO-friendly
-- Fast performance
-- Light & dark mode
-- Highly customizable
-- Organizable blog posts
-- Responsive & accessible
-- Static search with [PageFind](https://pagefind.app/)
-- Automatic social image generation
+* **Mtor (Senior Data Scientist):** Built the company's entire data infrastructure from scratch (PostgreSQL/Redash) and directed 1000+ monthly commercial purchases via demand forecasting.
+* **Swvl (Data Scientist):** Deployed multivariate time-series forecasting models (Gradient Boosting) that reduced RMSE by 13%, serving millions of customers.
+* **Maxab:** Optimized vehicle dispatching using Python (PuLP), reducing planning time by 85%.
 
-and so much more.
+### 💻 Tech Stack
+* **Languages:** Python, C++, SQL
+* **DL/ML:** PyTorch, Hugging Face, LangChain, GNNs, XGBoost
+* **Ops:** Docker, Airflow, AWS, Google Cloud Platform
 
-## Show your support
-
-If you like [AstroPaper](https://github.com/satnaing/astro-paper), consider giving it a star ⭐️.
-
-Found a bug 🐛 or have an improvement ✨ in mind? Feel free to open an [issue](https://github.com/satnaing/astro-paper/issues), submit a [pull request](https://github.com/satnaing/astro-paper/pulls) or start a [discussion](https://github.com/satnaing/astro-paper/discussions).
-
-If you find this theme helpful, you can also [sponsor me on GitHub](https://github.com/sponsors/satnaing) or [buy me a coffee](https://buymeacoffee.com/satnaing) to show your support — every penny counts.
-
-Kyay zuu! 🙏🏼
+---
+*Feel free to read my [publications](https://scholar.google.com/citations?user=OIdLwQgAAAAJ&hl=en) or check out my [code on GitHub](https://github.com/hassan-sarwat).*
