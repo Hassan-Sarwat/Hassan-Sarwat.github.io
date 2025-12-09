@@ -25,10 +25,14 @@ jobs:
       - name: Checkout your repository using git
         uses: actions/checkout@v4
       
+      - name: Install pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 9
+
       - name: Install, build, and upload your site
         uses: withastro/action@v2
-        # withastro/action is a pre-made script that detects npm, builds the site, 
-        # and prepares it for GitHub Pages automatically.
+        # withastro/action will detect pnpm automatically and build your site
 
   deploy:
     needs: build
