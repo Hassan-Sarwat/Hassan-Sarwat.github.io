@@ -29,7 +29,7 @@
     }
 
     a {
-      @apply break-words text-accent underline decoration-dashed underline-offset-4 hover:text-accent/80 focus-visible:no-underline;
+      @apply break-words text-foreground decoration-dashed underline-offset-4 hover:text-accent focus-visible:no-underline;
     }
 
     ul {
@@ -81,7 +81,7 @@
     }
 
     details {
-      @apply inline-block cursor-pointer text-foreground select-none [&_p]:hidden [&_ul]: !my-0;
+      @apply inline-block cursor-pointer text-foreground select-none [&_p]:hidden [&_ul]:!my-0;
     }
 
     summary {

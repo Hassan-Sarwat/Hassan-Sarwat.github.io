@@ -1,9 +1,12 @@
 services:
   app:
-    image: node:lts
+    build:
+      context: .
+      target: base
     ports:
       - 4321:4321
     working_dir: /app
-    command: npm run dev -- --host 0.0.0.0
+    command: pnpm run dev --host 0.0.0.0
     volumes:
       - ./:/app
+      - /app/node_modules

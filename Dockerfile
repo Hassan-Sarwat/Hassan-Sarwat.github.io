@@ -12,6 +12,7 @@ COPY . .
 RUN pnpm run build
 
 # Runtime stage for serving the application
+# Cache bust: 1
 FROM nginx:mainline-alpine-slim AS runtime
 COPY --from=base /app/dist /usr/share/nginx/html
 EXPOSE 80
