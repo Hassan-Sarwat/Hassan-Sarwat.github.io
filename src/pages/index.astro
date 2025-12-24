@@ -12,6 +12,9 @@ import IconRss from "@/assets/icons/IconRss.svg";
 import IconArrowRight from "@/assets/icons/IconArrowRight.svg";
 import { SITE } from "@/config";
 import { SOCIALS } from "@/constants";
+import { Image } from "astro:assets";
+import hassanImage from "@/assets/images/hassan_pharoh.png"
+
 
 const posts = await getCollection("blog");
 
@@ -23,17 +26,30 @@ const recentPosts = sortedPosts.filter(({ data }) => !data.featured);
 <Layout>
   <Header />
   <main id="main-content" data-layout="index">
-    <section id="hero" class="pt-8 pb-6">
-      <h1 class="mr-2 text-5xl font-bold sm:text-7xl">
-      Welcome to my blog
-    </h1>
+    <section id="hero" class="pt-8 pb-6 flex flex-col sm:flex-row items-center gap-8">
+      <div class="flex-1 flex justify-center sm:justify-start">
+        <Image
+          src={hassanImage}
+          alt="Hassan Sarwat"
+          class="w-48 h-48 sm:w-64 sm:h-64 rounded-full object-cover border-4 border-skin-accent shadow-lg"
+        />
+      </div>
+      <div class="flex-1">
+        <h1 class="mr-2 text-5xl font-bold sm:text-7xl">Welcome to my blog</h1>
 
-    <p class="my-6">
-    This is a blog where I write about stuff I want to write about, some of it will be technical, some will not be.
-    All topics are open to discussion or feedback, feel free to reach out in one of the links below or discuss in the comments.  
-    </p>
+        <p class="my-6">
+          This is a blog where I write about stuff I want to write about, some of
+          it will be technical, some will not be. If you're interested in my
+          portfolio please check the <a href="/about/">about</a> page.
+          <br />
+          All Opinions are my own and are not representative of any company I work
+          or used to work for.
+          <br />
+          All topics are open to discussion or feedback, feel free to reach out in
+          one of the links below or discuss in the comments.
+        </p>
+      </div>
     </section>
-
     <Hr />
 
     {
