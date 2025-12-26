@@ -40,6 +40,8 @@ Here's a figure from the original EAGLE[^3] paper showing the comparisons
 
 ![Comparisons](C:/Users/the25th/Documents/Hassan-Sarwat.github.io/src/assets/images/eagle_paper_image_comparisons.png)
 
+
+
 If you are interested in reading more and maths is your thing, I've attached the references at the bottom, I won't say that I won't do a deep dive into the maths of it in a later part in the series but probably not this part.
 
 ### Problem Statement
@@ -49,7 +51,27 @@ For this project I wanted to apply speculative decoding, and also experiment a b
 1. Speculative decoding provides speedup over traditional LLM token prediction (we know this is true, but now we will implement it)
 2. We can maintain the same reasoning performance and reduce token output by training on chain of draft instead of chain of thought.
 
-Perfect, now that we have identified the problem the task should be easy, just ask claude, and don't forget adding please at the end so our AI overlords remember us fondly when they take over. No unfortunately we are here to learn, and therefore must do things ourselves.
+The first problem is self explanatory, the second problems needs a bit more clarification. How do we define chain of draft, a summary is not exact enough for our very scientific brains. In this experiment our definition will be as follows. **A chain of draft must be 3-5 steps where each step has a maximum of 5 words.**
+
+Why did we pick this intuition, what is the reason behind it? First, chain of thought includes a lot of rambling, more rambling means more tokens and more tokens mean slower speed. The second reason is because when doing speculative decoding, we want the target model to accept the tokens of the draft model, and the longer the sequences of tokens the higher chance of divergence and therefore more rejections from the main model.
+
+![Comparisons](C:/Users/the25th/Documents/Hassan-Sarwat.github.io/src/assets/images/why-waste-time-when-few-word-do-trick.gif)
+
+Those are our two problem statements. For now, we will purely focus on the implementation of speculative decoding, the first problem. In the later parts of the series we will do the tests and analysis for chain of draft, it's improvement over chain of thought, how much tokens were saved, was the accuracy different, how much faster is it? etc...
+
+So now that we have our problem, what are we going to do. Our pipeline is basically as follows
+
+1. Dataset generation 
+2. Target Model Training 
+3. Draft Model Training
+4. Inference
+5. Evaluation
+
+### Dataset Generation
+
+The fun step. So what dataset 
+
+
 
 
 ## References
