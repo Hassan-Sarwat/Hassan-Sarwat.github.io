@@ -1,7 +1,7 @@
 ---
 title: On Chain of Draft Speculative Decoding and how to speed up your LLMs - 0
 author: Hassan Sarwat
-pubDatetime: 2025-06-01T10:00:00Z
+pubDatetime: 2025-12-27T10:00:00Z
 slug: spec_decode_0
 featured: true
 draft: false
@@ -112,11 +112,11 @@ So now that we have our problem, what are we going to do? In the rest of this bl
 2. Target & Draft Model Training
 3. Inference & Evaluation
 
-##### Dataset Generation
+#### Dataset Generation
 
 In this part of the series I'll walk you through which datasets to be picked for our hypotheses, how to generate your own chain of draft/thought datasets using Batch API from gemini, how to analyze and make sure the datasets are clean, and how to analyze the datasets
 
-##### Target & Draft Model Training
+#### Target & Draft Model Training
 
 This part will involve deciding which models to train on which datasets, as this is a hobby project and the GPU/training cost is from my own money, I'll stick to the bare minimum to prove the hypotheses mentioned above, but as mentioned above we will be training a Qwen2.5-14B-Instruct (target) on both chain of draft and chain of thought reasoning, and finally we will be distilling the reasoning of those models and using it to train a Qwen2.5-0.5B-Instruct (draft) models. As a list, it will be as follows, we will train the following:
 
@@ -125,7 +125,7 @@ This part will involve deciding which models to train on which datasets, as this
 3. Chain of Thought Qwen2.5-0.5B-Instruct (Draft CoT)
 4. Chain of Draft Qwen2.5-0.5B-Instruct (Draft CoD)
 
-##### Inference and Evaluation
+#### Inference and Evaluation
 
 In the final blog post of the series we will compare our trained models against each other and against untrained models. We will talk about which metrics to use and why, and also how to measure said metrics. Finally after evaluation we will identify whether our hypotheses were correct or not, and if not, why? What went wrong and what can be improved.
 
