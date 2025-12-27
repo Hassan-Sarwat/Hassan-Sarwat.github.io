@@ -6,8 +6,9 @@ slug: introduction
 featured: true
 draft: false
 tags:
-  - Bad Joke
-  - Philosophy
+  - Not funny
+  - Bad joke
+  - Non Technical
 description:
   "This is a really bad and a really long joke. This is your last chance, stop while you can"
 ---
