@@ -26,7 +26,7 @@ I was working on a chatbot with friends and when we considered deploying our own
 
 
 <figure style="text-align: center;">
-  <img src="/src/assets/images/gpu_cost_soldier_image.jpg" alt="GPU Cost Soldier" width="50%">
+  <img src="/assets/images/gpu_cost_soldier_image.jpg" alt="GPU Cost Soldier" width="50%">
 </figure>
 
 My thought process was as follows, *if people have sped up and improved LLM training, then surely something exists for LLM inference.* And I was correct. Having spent the last 3 years mostly working on pure research during my master's, inference speed was not a metric I cared for a lot. Very rarely was it mentioned in most papers and if it was it was written in the appendix, people usually cared more about being correct than being fast.
@@ -44,7 +44,7 @@ The way standard speculative decoding does it is by using a smaller draft model.
 Here's a figure from the original EAGLE[^3] paper showing the comparisons 
 
 <figure style="text-align: center;">
-  <img src="/src/assets/images/eagle_paper_image_comparisons.png" alt="Comparisons" width="100%">
+  <img src="/assets/images/eagle_paper_image_comparisons.png" alt="Comparisons" width="100%">
   <figcaption>A visualization of how different methods performa speculative decoding</figcaption>
 </figure>
 
@@ -53,7 +53,7 @@ That was a very brief literature review section and we can now resume with the s
 
 In standard decoding you will have the Professor write up the entire response, word by word, taking forever. In Speculative decoding you have the student write the report, and the professor can have a look at N words at a time and then either accept, or reject and suggest edits. 
 
-##### The Mathematics of speculative decoding
+#### The Mathematics of speculative decoding
 
 Like any good maths explanation, we first have to start by defining what our variables are, we have:
 
@@ -99,7 +99,7 @@ Why did we pick this definition, what is the reason behind it? First, chain of t
 
 
 <figure style="text-align: center;">
-  <img src="/src/assets/images/why-waste-time-when-few-word-do-trick.gif" alt="Comparisons" width="75%">
+  <img src="/assets/images/why-waste-time-when-few-word-do-trick.gif" alt="Comparisons" width="75%">
 </figure>
 
 Those are our two problem statements. For now, we will purely focus on the implementation of speculative decoding, the first problem. In the later parts of the series we will do the tests and analysis for chain of draft, it's improvement over chain of thought, how much tokens were saved, was the accuracy different, how much faster is it? etc...
