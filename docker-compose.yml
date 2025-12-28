@@ -2,7 +2,7 @@ services:
   app:
     build:
       context: .
-      target: base
+      target: dev
     ports:
       - 4321:4321
     working_dir: /app

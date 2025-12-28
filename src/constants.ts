@@ -9,6 +9,9 @@ import IconTelegram from "@/assets/icons/IconTelegram.svg";
 import IconPinterest from "@/assets/icons/IconPinterest.svg";
 import { SITE } from "@/config";
 
+import type { GiscusProps } from "@giscus/react";
+
+
 interface Social {
   name: string;
   href: string;
@@ -75,3 +78,16 @@ export const SHARE_LINKS: Social[] = [
     icon: IconMail,
   },
 ] as const;
+
+export const GISCUS: GiscusProps = {
+  repo: "Hassan-Sarwat/Hassan-Sarwat.github.io",
+  repoId: "R_kgDOQZqs7w",
+  category: "Announcements",
+  categoryId: "DIC_kwDOQZqs784C0UC0",
+  mapping: "pathname",
+  reactionsEnabled: "0",
+  emitMetadata: "0",
+  inputPosition: "bottom",
+  lang: "en",
+  loading: "lazy",
+};

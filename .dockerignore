@@ -1,8 +1,17 @@
-# Ignore Astro files
-*.astro
-
 # Ignore node_modules directory
 node_modules/
 
 # Ignore build output
 dist/
+
+# Git
+.git/
+.gitignore
+
+# IDE
+.vscode/
+.idea/
+
+# Misc
+*.log
+.DS_Store
