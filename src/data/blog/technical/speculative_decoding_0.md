@@ -1,7 +1,7 @@
 ---
 title: On Chain of Draft Speculative Decoding and how to speed up your LLMs - 0
 author: Hassan Sarwat
-pubDatetime: 2025-12-27T10:00:00Z
+pubDatetime: 2025-12-28T20:12:32Z
 slug: spec_decode_0
 featured: true
 draft: false
@@ -39,7 +39,7 @@ Nevertheless I decided to go with speculative decoding, mainly due to the model 
 
 And how can it make my inference faster? Speculative decoding and other methods follow a very similar way of thinking. Why have the very smart but slow and deliberate Professor do the work when you can train a faster but dumber Student to act like it, and then the Professor just needs to approve and/or correct the work.
 
-The way standard speculative decoding does it is by using a smaller draft model. For example, in this code tutorial we fine-tune a Qwen2.5-14B-Instruct as our target model (Professor) and use a smaller Qwen2.5-0.5B-Instruct model as our draft model (Student). Medusa on the other hand works by training multiple heads and attaching them to the same model. So if we used Medusa our Qwen2.5-14B-Instruct would have the main head to predict token N, and additional *k* heads that will be used to predict tokens from N+1 to N+*k*+1 ([^2] recommends *k*=5). Where standard speculative decoding is trained on the output of the target model, EAGLE is a lightweight transformer that is trained on the second to top layer embeddings of the target model before the output, learning semantic context that wouldn't be possible otherwise. 
+The way standard speculative decoding does it is by using a smaller draft model. For example, in this code tutorial we fine-tune a Qwen2.5-14B-Instruct as our target model (Professor) and use a smaller Qwen2.5-0.5B-Instruct model as our draft model (Student). Medusa on the other hand works by training multiple heads and attaching them to the same model. So if we used Medusa our Qwen2.5-14B-Instruct would have the main head to predict token N, and additional K heads that will be used to predict tokens from N+1 to N+K+1 ([^2] recommends K=5). Where standard speculative decoding is trained on the output of the target model, EAGLE is a lightweight transformer that is trained on the second to top layer embeddings of the target model before the output, learning semantic context that wouldn't be possible otherwise. 
 
 Here's a figure from the original EAGLE [^3] paper showing the comparisons 
 
@@ -59,18 +59,18 @@ Like any good maths explanation, we first have to start by defining what our var
 
 * **$T_{target}$**: The time taken for 1 forward pass from the target model
 * **$T_{draft}$**: The time taken for 1 forward pass from the draft model
-* **$N$**: The number of tokens the draft model guesses ahead (e.g. 5)
+* **$K$**: The number of tokens the draft model guesses ahead (e.g. 5)
 * **$\alpha (Alpha)$**: The acceptance rate
 
 Standard decoding generates 1 token in time $T_{target}$. Speculative decoding takes a gamble step which costs
 
 $$
 \begin{aligned}
-Cost_{step}=(N\cdot T_{draft}) + T_{target}
+Cost_{step}=(K\cdot T_{draft}) + T_{target}
 \end{aligned}
 $$
 
-Or in English, time to draft N tokens + time to verify them, this single step is expected to generate
+Or in English, time to draft K tokens + time to verify them, this single step is expected to generate
 
 $$ 
 \begin{aligned}
@@ -84,7 +84,7 @@ Therefore the expected time per token in speculative decoding is the cost per st
 
 $$
 \begin{aligned}
-Time_{spec} = \frac{(N\cdot T_{draft}) + T_{target}}{1 + K \alpha}
+Time_{spec} = \frac{(K\cdot T_{draft}) + T_{target}}{1 + K \alpha}
 \end{aligned}
 $$
 
@@ -98,14 +98,14 @@ For this project I wanted to apply speculative decoding as a learning exercise, 
 
 My hypothesis is as follows, can we train a reasoning model on a summarized chain of thought, also called chain of draft, and teach a model to reason with less steps without affecting accuracy? 
 
-As always when starting a project you need to check if someone had a similar idea, and yes, There's already a paper published back in February 2025 called **Chain of Draft: Thinking Faster by Writing Less**[^5], however their strategy involves prompting whereas ours involves fine-tuning. Our project also investigates the effect of chain of draft on speculative decoding.
+As always when starting a project you need to check if someone had a similar idea, and yes, There's already a paper published earlier this year in February 2025 called **Chain of Draft: Thinking Faster by Writing Less**[^5], however their strategy involves prompting whereas ours involves fine-tuning. Our project also investigates the effect of chain of draft on speculative decoding.
 
 **So for this project we have the following hypotheses:**
 * Fine-tuning the model on reasoning will improve its accuracy
 * Speculative decoding will reduce our inference time without affecting accuracy
 * Chain of draft will reduce our total tokens with only minimal effect on accuracy
 
-The first two hypotheses are self explanatory, the third hypthesis needs a bit more clarification. How do we define chain of draft, a summary is not exact enough for our very scientific brains. In this experiment our definition will be as follows. **A chain of draft must be 3-5 steps where each step has a maximum of 5 words.**
+The first two hypotheses are self explanatory, the third hypothesis needs a bit more clarification. How do we define chain of draft, a summary is not exact enough for our very scientific brains. In this experiment our definition will be as follows. **A chain of draft must be 3-5 steps where each step has a maximum of 5 words.**
 
 Why did we pick this definition, what is the reason behind it? First, chain of thought includes a lot of rambling, more rambling means more tokens and more tokens mean slower speed. The second reason is because when doing speculative decoding, we want the target model to accept the tokens of the draft model, and the longer the sequences of tokens the higher chance of divergence and therefore more rejections from the main model.
 
