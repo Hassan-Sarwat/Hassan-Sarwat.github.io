@@ -1,7 +1,7 @@
 ---
 title: On Chain of Draft Speculative Decoding and how to speed up your LLMs - 1
 author: Hassan Sarwat
-pubDatetime: 2025-01-05T20:12:32Z
+pubDatetime: 2026-01-05T20:12:32Z
 slug: spec_decode_1
 featured: true
 draft: false
@@ -370,12 +370,7 @@ But what was the impact on token and step count? We need to visualize this, so w
   <figcaption>The full reductions by percentages</figcaption>
 </figure>
 
-
-
 Perfect, now that we have our dataset and did the analysis and have a clear understanding, we can finally start training. Let's see how it goes in the next blog post.
-
-
-
 
 ## References
 [^1]:[Training Verifiers to Solve Math Word Problems](https://arxiv.org/abs/2110.14168)
