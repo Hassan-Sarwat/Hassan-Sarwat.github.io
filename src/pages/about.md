@@ -25,8 +25,8 @@ Prior to my Master's, I spent 4+ years as a Data Scientist in fast-paced tech en
 - Built production Demand Forecasting models using XGBoost, directly guiding purchasing decisions.
 
 **Data Scientist - Swvl (August 2021 - August 2022)** 
-- Developed a Deep Learning demand model (LSTM & Gradient Boosting) that reduced RMSE by 13% vs. legacy methods.
-- Deployed Time-Series models using Docker and Kubernetes, establishing CI/CD pipelines and monitoring performance via Airflow
+- Developed a Machine Learning demand model (LSTM & Gradient Boosting) that reduced RMSE by 13% vs. legacy methods.
+- Deployed Time-Series models using Docker and Kubernetes, establishing CI/CD pipelines and managing ETLs using Airflow.
 - Optimized BigQuery queries used to predict demand hour based on user behavior on the app, reducing cloud computation cost by 90%
 - Founded Data Governance Team to standardize metric definitions across the organization
 - Experimented with different methodologies when developing multiple time series models, using Statistical methods like ARIMA, machine learning methods like Gradient Boosting, and Deep learning methods like LSTM
@@ -35,7 +35,7 @@ Prior to my Master's, I spent 4+ years as a Data Scientist in fast-paced tech en
 - Assisted our commercial, marketing, and acquisition team by building and deploying a customer segmentation model using XGBoost achieving 97% accuracy.
 - Led in Daily/Monthly KPI review meetings, regularly presenting dashboards I created to analytics team and entire organization, using data insights to identify bottlenecks and strategize next steps.
 - Coordinated with the marketing team and used python to design a campaign targeting program that assigned our weekly offers to the customers, achieving a 40% conversion rate.
-- Built a vehicle dispatch optimization model that automated our daily route planning and reduced human involvement time by 90%
+- Built a vehicle dispatch optimization model that automated our daily route planning and reduced human involvement time by 85%
 
 ### 🔬 Research Experience
 
@@ -74,7 +74,6 @@ I specialize in **Natural Language Processing (NLP)** and traditional **Machine 
 ### Education
 
 * Master's in Data Engineering and Analytics at Technical University of Munich (April 2022 - September 2025)
-
 * Bachelor's in Computer Science at Ain Shams University (September 2015 - August 2019)
 
 ---
