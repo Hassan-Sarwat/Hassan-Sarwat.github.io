@@ -105,9 +105,9 @@ As always when starting a project you need to check if someone had a similar ide
 * Speculative decoding will reduce our inference time without affecting accuracy
 * Chain of draft will reduce our total tokens with only minimal effect on accuracy
 
-The first two hypotheses are self explanatory, the third hypothesis needs a bit more clarification. How do we define chain of draft, a summary is not exact enough for our very scientific brains. In this experiment our definition will be as follows. **A chain of draft must be 3-5 steps where each step has a maximum of 5 words.**
+The first two hypotheses are self explanatory, the third hypothesis needs a bit more clarification. How do we define chain of draft, a summary is not exact enough for our very scientific brains. In this experiment our definition will be as follows. **A chain of draft is a reasoning method that strips away conversational filler while maintaining state knowledge.**
 
-Why did we pick this definition, what is the reason behind it? First, chain of thought includes a lot of rambling, more rambling means more tokens and more tokens mean slower speed. The second reason is because when doing speculative decoding, we want the target model to accept the tokens of the draft model, and the longer the sequences of tokens the higher chance of divergence and therefore more rejections from the main model.
+Why did we pick this definition, what is the reason behind it? First, chain of thought includes a lot of rambling, more rambling means more tokens and more tokens mean slower speed. The second reason is because when doing speculative decoding, we want the target model to accept the tokens of the draft model, and the longer the sequences of tokens the higher chance of divergence and therefore more rejections from the main model. By removing the filler and only keeping the relevant and important knowledge, we hypothesize that this will increase the chance of alignment.
 
 
 <figure style="text-align: center;">
