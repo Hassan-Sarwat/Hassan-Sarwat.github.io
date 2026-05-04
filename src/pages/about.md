@@ -14,34 +14,34 @@ Prior to my Master's, I spent 4+ years as a Data Scientist in fast-paced tech en
 
 
 **Business Analyst (Part Time) - Incuda (May 2023 - January 2025)** 
-- Developed an autonomous AI Agent using LangChain to automate competitor analysis, integrating web scrapers and LLM-based reporting.
+- Developed an autonomous AI Agent using LangChain to automate competitor analysis, integrating web scrapers and LLM-based reporting
 - Engineered robust SQL unit tests to ensure data integrity and resolved quality issues across disparate data sources.
 - Developed comprehensive PowerBI dashboards for marketing teams to track campaign performance
 
 **Senior Data Scientist - Mtor (August 2022 - August 2023)** 
-- Architected the company’s central data warehouse using PostgreSQL and Redash, enabling real-time analytics for 100+ agents.
-- Mentored junior analysts and communicated closely with co-founders providing ad-hoc data analysis when needed or as requested from investors.
+- Architected the company’s central data warehouse using PostgreSQL and Redash, enabling real-time analytics for 100+ agents
+- Mentored junior analysts and communicated closely with co-founders providing ad-hoc data analysis when needed or as requested from investors
 - Engineered a Multi-Vehicle Routing Optimization system using Google OR-Tools to streamline logistics across the supply chain.
-- Built production Demand Forecasting models using XGBoost, directly guiding purchasing decisions.
+- Built production Demand Forecasting models using XGBoost, directly guiding purchasing decisions of more than 1000+ SKUs
 
 **Data Scientist - Swvl (August 2021 - August 2022)** 
-- Developed a Machine Learning demand model (LSTM & Gradient Boosting) that reduced RMSE by 13% vs. legacy methods.
-- Deployed Time-Series models using Docker and Kubernetes, establishing CI/CD pipelines and managing ETLs using Airflow.
-- Optimized BigQuery queries used to predict demand hour based on user behavior on the app, reducing cloud computation cost by 90%
+- Developed a multiple time series demand forecasting model that reduced RMSE by 13\% vs. legacy methods.
+- Deployed Time-Series models using Docker and Kubernetes, establishing CI/CD pipelines and monitoring performance via MLflow
+- Optimized BigQuery queries used to predict demand hour based on user behavior on the app, reducing cloud computing cost by 90\%
 - Founded Data Governance Team to standardize metric definitions across the organization
-- Experimented with different methodologies when developing multiple time series models, using Statistical methods like ARIMA, machine learning methods like Gradient Boosting, and Deep learning methods like LSTM
+- Identified and fixed duplication errors in existing SQL logic that was affecting 10\% of records
 
 **Data Scientist - Maxab (October 2019 - July 2021)** 
-- Assisted our commercial, marketing, and acquisition team by building and deploying a customer segmentation model using XGBoost achieving 97% accuracy.
+- Assisted our commercial, marketing, and acquisition team by building and deploying a customer segmentation model using XGBoost achieving 97\% accuracy.
 - Led in Daily/Monthly KPI review meetings, regularly presenting dashboards I created to analytics team and entire organization, using data insights to identify bottlenecks and strategize next steps.
-- Coordinated with the marketing team and used python to design a campaign targeting program that assigned our weekly offers to the customers, achieving a 40% conversion rate.
-- Built a vehicle dispatch optimization model that automated our daily route planning and reduced human involvement time by 85%
+- Coordinated with the marketing team and used python to design a campaign targeting program that assigned our weekly offers to the customers, achieving a 40\% conversion rate.
+- Used A/B Testing to create new KPIs for our Acquisition team and increase retention rate of our customers
 
 ### 🔬 Research Experience
 
 I specialize in **Natural Language Processing (NLP)** and traditional **Machine Learning**. My research has been published in conferences like **LREC-COLING** and one journal publication with **Sensors** accumulating over **40+ citations** to date.
 
-**[Research Intern](https://github.com/Hassan-Sarwat/disentagled_multimodal_fusion) - LIS Labs (January 2025 - July 2025)**
+**[Research Scientist](https://github.com/Hassan-Sarwat/disentagled_multimodal_fusion) - LIS Labs (January 2025 - July 2025)**
 - Applied Uncertainty quantification with Multimodal Learning using Evidential Neural Networks
 - Created a novel Late Fusion method for Uncertainty Quantification using Disentanglement to better estimate uncertainty in partly dependent modalities
 - Implemented state-of-the-art research papers in Pytorch and Pytorch Lightning to benchmark performance
@@ -82,3 +82,5 @@ I specialize in **Natural Language Processing (NLP)** and traditional **Machine 
 ---
 
 If you've made it this far I like to read, a lot, mainly fantasy, but recently started branching out to other genres. I like board games and dungeons and dragons. I don't say no to sports and like to move except maybe running. Sometimes I like jumping in the ice cold water. I enjoy a good movie every now and then. My favorite hobbies are making people laugh at the wrong time and giving questionable advice. 
+
+I can speak Fluent Arabic (Egyptian), English, and I can function badly in german but still function, I am actively working on it though.
