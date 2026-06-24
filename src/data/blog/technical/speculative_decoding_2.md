@@ -18,7 +18,9 @@ description:
 
 ### Datasets
 
-This is the second part of the series on Chain of Draft Speculative Decoding, first part can be found [here](/speculative_decoding_1). In this part we will talk about which dataset to pick and how to generate them. The code for this script can be found [here](https://github.com/Hassan-Sarwat/efficient-speculative-decoding/tree/master/data_generation)
+This is the second part of the series on Chain of Draft Speculative Decoding, first part can be found [here](/posts/technical/spec_decode_1), and the third part can be found [here](/posts/technical/spec_decode_3).
+
+In this part we will talk about which dataset to pick and how to generate them. The code for this script can be found [here](https://github.com/Hassan-Sarwat/efficient-speculative-decoding/tree/master/data_generation)
 
 
 Before we start let's  have a quick reminder of our hypotheses:

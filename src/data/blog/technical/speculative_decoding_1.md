@@ -16,6 +16,8 @@ description:
 
 # Introduction
 
+
+
 ### Why I started this series
 
 I have recently finished my master's degree at TUM, however learning is an eternal journey, so it's good to dedicate some free time to it, and what better way to do it than by building and working on projects.
@@ -120,9 +122,11 @@ So now that we have our problem, what are we going to do? In the rest of this bl
 
 ### The Plan
 
-1. Dataset generation & Analysis
-2. Target & Draft Model Training
-3. Inference & Evaluation
+1. [Dataset generation & Analysis](/posts/technical/spec_decode_2)
+2. [Target & Draft Model Training](/posts/technical/spec_decode_3)
+3. [Inference & Evaluation](/posts/technical/spec_decode_3)
+
+*Note*: 2 and 3 were combined into 1 blog post, so they link to the same post
 
 **Dataset Generation**
 
@@ -140,6 +144,8 @@ This part will involve deciding which models to train on which datasets, as this
 **Inference and Evaluation**
 
 In the final blog post of the series we will compare our trained models against each other and against untrained models. We will talk about which metrics to use and why, and also how to measure said metrics. Finally after evaluation we will identify whether our hypotheses were correct or not, and if not, why? What went wrong and what can be improved.
+
+
 
 
 ## References

@@ -22,8 +22,8 @@ description:
 
 Welcome to the third and final post of the chain of draft speculative decoding series. The other parts of the blog can be found here
 
-1. [Part 1: Introduction](/speculative_decoding_1)
-2. [Part 2: Dataset Generation and Evaluation](/speculative_decoding_2)
+1. [Part 1: Introduction](/posts/technical/spec_decode_1)
+2. [Part 2: Dataset Generation and Evaluation](/posts/technical/spec_decode_2)
 
 
 The post will have the following structure
