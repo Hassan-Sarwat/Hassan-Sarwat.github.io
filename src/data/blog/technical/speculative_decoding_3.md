@@ -90,7 +90,7 @@ For our model parameters, we set the following values, which can be found in `co
 **Memory Usage and Training Loss**
 
 <figure style="text-align: center;">
-  <img src="src/assets/images/training_gpu_target.png" alt="Target GPU Usage Graph" width="85%">
+  <img src="/assets/images/spec_decode/training_gpu_target.png" alt="Target GPU Usage Graph" width="85%">
 </figure>
 
 From this chart we notice a few things, first the training with chain of draft peaked at around 33GB vs chain of thought which peaked at around 36GB, we also notice that there was an approximately 10 minute difference between training of chain of draft and training with chain of thought. 
@@ -98,7 +98,7 @@ From this chart we notice a few things, first the training with chain of draft p
 Which makes sense, if you refer back to the previous blog chain of draft dataset answers generally had 50% of the tokens compared to chain of thought.
 
 <figure style="text-align: center;">
-  <img src="src/assets/images/training_loss_target.png" alt="Target Training Loss Graph" width="85%">
+  <img src="/assets/images/spec_decode/training_loss_target.png" alt="Target Training Loss Graph" width="85%">
 </figure>
 
 The second part is the training loss, we mostly observe the training loss to make sure training worked as intended and model trained correctly, otherwise it's pointless to generate a distilled dataset from a model that didn't learn correctly, undercutting the whole experiment and purpose of alignment.
@@ -143,14 +143,14 @@ Everything else is identical, even the LoRA parameters, you could play around wi
 Just because it feels like everything will be good doesn't mean it has to be, we need to check. So we once again look at the loss curves and make sure they learned correctly
 
 <figure style="text-align: center;">
-  <img src="src/assets/images/training_loss_draft.png" alt="Draft Training Loss Graph" width="85%">
+  <img src="/assets/images/spec_decode/training_loss_draft.png" alt="Draft Training Loss Graph" width="85%">
 </figure>
 
 From the graphs we can see that our loss function has been steadily decreasing for all the different draft models, 
 
 
 <figure style="text-align: center;">
-  <img src="src/assets/images/training_GPU_draft.png" alt="Draft GPU Usage Graph" width="85%">
+  <img src="/assets/images/spec_decode/training_gpu_draft.png" alt="Draft GPU Usage Graph" width="85%">
 </figure>
 
 In this graph as well we notice that it follows the trend of the previous one, with Chain of Draft models using noticeably less memory, ~3-4GB compared to ~5-6GB for Chain of Thought.
@@ -209,19 +209,19 @@ The test size was to a minimum of test dataset or 1000, that's why there's a dis
 Now that we've discussed what metrics we need it's time to look at the results. First the acceptance rate
 
 <figure style="text-align: center;">
-  <img src="src/assets/images/acceptance_rate.png" alt="Acceptance Rate Graph" width="85%">
+  <img src="/assets/images/spec_decode/acceptance_rate.png" alt="Acceptance Rate Graph" width="85%">
 </figure>
 
 Looking at this graph we notice a 4-5% jump in acceptance rate across the different scenario, which tells us that our hypothesis does indeed have merit, and we are working towards something solid. Next the median tokens per response
 
 <figure style="text-align: center;">
-  <img src="src/assets/images/token_distribution.png" alt="Median Token Graph" width="85%">
+  <img src="/assets/images/spec_decode/token_distribution.png" alt="Median Token Graph" width="85%">
 </figure>
 
 Looking at this graph we notice an obvious reduction in number of tokens in both easy and medium, while not as significant as in the gemini generated dataset it is an obvious drop. However we notice in the hard scenario there's almost no difference in number, it could be that it learned enough for the dense computational reasoning but not enough for the brevity. Now for the validation, we first look at the accuracy
 
 <figure style="text-align: center;">
-  <img src="src/assets/images/accuracy.png" alt="Accuracy Graph" width="85%">
+  <img src="/assets/images/spec_decode/accuracy.png" alt="Accuracy Graph" width="85%">
 </figure>
 
 Looking at this graph, we have first the baseline untrained models, which have a lot lower accuracy compared to our fine-tuned models. We also notice that speculative decoding has no impact on accuracy, with both CoT and CoD matching the non-speculative decoding accuracy. 
@@ -231,7 +231,7 @@ Next we also notice a clear improvement in accuracy in CoD compared to CoT, a 16
 This can also explain the lower improvement in response length, as the model picked up the computation and not the brevity. Before we can confirm this however we need to make sure that both models outputted valid answers
 
 <figure style="text-align: center;">
-  <img src="src/assets/images/answer_validation.png" alt="Answer Validation Graph" width="85%">
+  <img src="/assets/images/spec_decode/answer_validation.png" alt="Answer Validation Graph" width="85%">
 </figure>
 
 In 2 of 3 cases, CoT has higher valid answers compared to CoD, however only marginally. With easy having almost 100%, medium ~95% and hard at ~80%, we can assume our models learned the behavior compared to the untrained baseline which only received the prompt and never set up the validator
@@ -241,15 +241,14 @@ As for how it has an accuracy higher than valid answers, I've added a function t
 Finally we observe the gpu overhead
 
 <figure style="text-align: center;">
-  <img src="src/assets/images/inference_vram.png" alt="GPU Overhead Graph" width="85%">
+  <img src="/assets/images/spec_decode/inference_vram.png" alt="GPU Overhead Graph" width="85%">
 </figure>
 
 In all scenarios, non-speculative decoding hovered around 37.3GB, whereas speculative decoding used ~38.8GB, an approximate 1.5GB increase or a 4% increase in VRAM, however this increase probably varies based on draft model and target model size.
 
 <figure style="text-align: center;">
-  <img src="src/assets/images/inference_throughput.png" alt="Inference Throughput Graph" width="85%">
+  <img src="/assets/images/spec_decode/inference_throughput.png" alt="Inference Throughput Graph" width="85%">
 </figure>
-![Inference Throughput Graph](../images/inference_throughput.png)
 
 So what does our 4% increase in GPU VRAM give us? An approximately 1.6x increase in throughput, with the paper[^5] reporting up to 2.5x in optimized scenarios
 
