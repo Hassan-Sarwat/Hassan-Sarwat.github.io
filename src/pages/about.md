@@ -71,6 +71,7 @@ I specialize in **Natural Language Processing (NLP)** and traditional **Machine 
 * **Tools:** Docker, Airflow, AWS, Flask, PowerBI, Tableau, Looker Studio, MongoDB, BigQuery, Git, Github, FastAPI, Weights and Biases (WandB)
 
 
+
 ### Education
 
 * Master's in Data Engineering and Analytics at Technical University of Munich (April 2022 - September 2025)

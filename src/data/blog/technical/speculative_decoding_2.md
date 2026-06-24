@@ -1,7 +1,7 @@
 ---
 title: On Chain of Draft Speculative Decoding and how to speed up your LLMs - 2
 author: Hassan Sarwat
-pubDatetime: 2026-01-05T04:12:32Z
+pubDatetime: 2026-01-04T20:12:32Z
 slug: spec_decode_2
 featured: true
 draft: false
@@ -10,52 +10,33 @@ tags:
   - Technical
   - Speculative Decoding
   - Chain of Draft
-  - Dataset Generation
-  - Data Cleaning
-  - Analysis
 description:
-  "The second part of the series explaining speculative decoding and my plan on applying a chain of draft instead of chain of thought when training reasoning models. This part dives into dataset selection, generation, and analysis"
+  "The second part of the series explaining speculative decoding and my plan on applying a chain of draft instead of chain of thought when training reasoning models. This part dives into dataset generation and selection"
 ---
 
 # Dataset Generation and Evaluation
 
-**Small Introduction** 
+### Datasets
 
-This one is pretty long, the topic just sort of exploded, so here's a very quick summary of achievements 
-
-1. Generated 6 datasets, 3 for Chain of thought and 3 for Chain of Draft across different difficulty levels, 1000 samples per dataset.
-2. Cleaned datasets, with final dataset sizes ranging from 890-950 samples.
-3. Chain of draft used 50% less tokens, think 50% less LLM output cost, with no accuracy loss (if we count 0.1% accuracy loss as 0)
-
-Notes:
-* Entire dataset generation cost approximately 5$ (From gemini billing) using Batch API
-* The choice for Gemini is purely due to free credits from Google.
-* This is not a data cleaning blog, more steps could've been taken to improve, and obviously there is a need to be more thorough in production/research environments. Maybe I'll write about it in another post about data cleaning/analysis/visualization, but I think this is good enough to showcase the way of thinking needed when going about it.
-
-In part 3 I will talk about training and fine-tuning the models, mainly deploying environments, training using unsloth for training with reduced memory, and inference with vllm for distilled dataset generation.
+This is the second part of the series on Chain of Draft Speculative Decoding, first part can be found [here](/speculative_decoding_1). In this part we will talk about which dataset to pick and how to generate them. The code for this script can be found [here](https://github.com/Hassan-Sarwat/efficient-speculative-decoding/tree/master/data_generation)
 
 
-## Datasets
-
-This is the second part of the series on Chain of Draft Speculative Decoding, first part can be found [here](/spec_decode_1). In this part we will talk about which dataset to pick and how to generate them. The code for this script can be found [here](https://github.com/Hassan-Sarwat/efficient-speculative-decoding/tree/master/data_generation)
-
-
-Before we start let's have a quick reminder of our hypotheses:
+Before we start let's  have a quick reminder of our hypotheses:
 * Fine-tuning the model on reasoning will improve its accuracy
 * Speculative decoding will reduce our inference time without affecting accuracy
 * Chain of draft will reduce our total tokens with only minimal effect on accuracy
 
-Looking at the requirements we notice that we will need to stress test our ideas under 3 conditions. The first test will be an easy scenario that our untrained 14B model can solve, and we mainly observe the impact on inference speed and accuracy when using speculative decoding and reasoning, this should be the case where you ask yourself "should I train the model with reasoning or not". 
+Looking at the requirements we notice that we will need to stress test our ideas under 3 conditions, an easy condition where our untrained 14B model can solve, and we mainly observe the impact on inference speed and accuracy when using speculative decoding and reasoning, this should be the case where you ask yourself "should I train the model with reasoning or not". 
 
-The second test will be a medium difficulty setting where our untrained target model can solve some questions, but fine-tuning will notably improve the accuracy. In this one we note the speedup using speculative decoding and also compare the accuracy of chain of draft vs chain of thought, can our small draft models keep up where even our target models have difficulty?
+The second test will be a medium difficulty setting where our untrained target model can solve some questions, but fine-tuning will notably improve the accuracy. In this one we note the speedup using speculative decoding and also compare the accuracy of chain of draft vs chain of thought, can our small draft models keep up where even our target models have difficulty.
 
-The final case will be the robustness test, a dataset that our untrained target model can't solve and only when it reasons can it begin to solve, we want to see if chain of draft can keep up with chain of thought under difficult conditions, and how does it impact our acceptance rate. Acceptance rate is how often the target model (Professor) accepts the output of our draft model (Student).
+The final case will be the robustness test, a dataset that our untrained target model can't solve and only when it reasons can it begin to solve, we want to see can chain of draft keep up with chain of thought under difficult conditions, and how does it impact our acceptance rate.
 
-Now that we've identified the requirements, we need to identify the pipeline that is scenario agnostic and fair.
+Now that we've identified the requirements, we need to identify the pipeline that is scenario agnostic and fair
 
 **Based on these conditions we decide on the following datasets**
 
-1. **GSM8K[^1]**: This is our easy dataset, it consists of grade school math questions and even our untrained model shouldn't have much difficulty solving these questions. Here's how a sample question and answer look like (new lines inserted for readability):
+1. **GSM8K[^2]**: This is our easy dataset, it consists of grade school math questions and even our untrained model shouldn't have much difficulty solving these questions. Here's how a sample question and answer look like (new lines inserted for readability):
 ```json
 {
   "Question":"Weng earns $12 an hour for babysitting.
@@ -68,7 +49,7 @@ Now that we've identified the requirements, we need to identify the pipeline tha
 ```
  
 
-2. **MATH {Levels: (1,2), Types: (Algebra, Intermediate Algebra, Precalculus)}[^2]**: Our medium difficulty dataset, this is a small step above our easy difficulty that the standard 14B model will still be able to solve some questions but we should notice an increase in accuracy from the trained models. The reason we picked these types is because it's procedural and doesn't need visual intuition versus something like geometry. This is where we expect our speculative decoding to really shine and give us a significant speed up. Here's a sample from the dataset.
+2. **MATH {Levels: (1,2), Types: (Algebra, Intermediate Algebra, Precalculus)}[^3]**: Our medium difficulty dataset, this is a small step above our easy difficulty that the standard 14B model will still be able to solve some questions but we should notice an increase in accuracy from the trained models. The reason we picked these types is because it's procedural and doesn't need visual intuition versus something like geometry. This is where we expect our speculative decoding to really shine and give us a significant speed up. Here's a sample from the dataset.
 ```json
 {
   "Question":"Suppose $d\not=0$. 
@@ -83,7 +64,7 @@ Now that we've identified the requirements, we need to identify the pipeline tha
 }
 ```
 
-3. **MATH {Levels: (3,4), Types: (Algebra, Intermediate Algebra, Precalculus)}[^2]**: Our final difficulty, this is where we stress test the chain of draft logic and see if it holds up in significantly long and complex scenarios. We also stress test the speculative decoding models as 0.5B draft models will have a significantly more difficult time solving this. 
+3. **MATH {Levels: (3,4), Types: (Algebra, Intermediate Algebra, Precalculus)}[^3]**: Our final difficulty, this is where we stress test the chain of draft logic and see if it holds up in significantly long and complex scenarios. We also stress test the speculative decoding models as 0.5B draft models will have a significantly more difficult time solving this. 
 ```json
 {
   "Question":"The increasing sequence of positive integers $a_1,$ $a_2,$ $a_3,$ $\dots$
@@ -116,25 +97,23 @@ So our pipeline would look as follows
 5. Train CoT/CoD draft models on distilled answers
 6. Evaluate metrics and performance
 
-And in this blog post we are going to be doing the first two steps, I'll walk you through the logic and link to the corresponding code, mainly focusing on the why as with the rise of AI it's more important to understand the reasoning behind things than just how to implement it.  
+And in this blog post we are going to be doing the first three steps, I'll walk you through the logic with addition of some code, mainly focusing on the why as with the rise of AI it's more important to understand the reasoning behind things than just how to implement it.  
 
 **Generating our own chain of thought**
 
-You might be asking yourself *Why would we generate our own chain of thought instead of using the answers provided by the dataset?*, there are a few reasons for this. First is reproducibility, if you have a dataset on huggingface you can run this code and do your own tests just fine. The second is unification, different datasets will have different logic or chains of thought, for example GSM8K uses the '<< >>' (calculator) tag to represent calculations, our 14B model will understand this but our 0.5B draft model will not, same applies to MATH dataset which uses latex. We want to filter out these operations and create a dataset that both our draft and target model can understand. 
+You might be asking yourself *Why would we generate our own chain of thought instead of using the answers provided by the dataset?*, there are a few reasons for this. First is reproducibility, if you have a dataset on huggingface you can run this code and do your own tests just fine. The second is unification, different datasets will have different logic or trains of thought, for example GSM8K uses the '<< >>' (calculator) tag to represent calculations, our 14B model will understand this but our 0.5B draft model will not, same applies to MATH dataset which uses latex. We want to filter out these operations and create a dataset that both our draft and target model can understand. 
 
-You might also be asking, *Isn't it expensive to generate our own train of thought?* And normally you'd be right, but there was a paper published in 2023 called LIMA: Less is More for Alignment[^3] which shows that what you really need is around 1000 samples to fine-tune a model for reasoning, and more than that you get diminishing returns. The second point and one of the reasons I'm using gemini for this experiment is that if you add your credit card information, you get 257$ in credits, which is more than enough for this experiment. 
+You might also be asking, *Isn't it expensive to generate our own train of thought?* And normally you'd be right, but there was a paper published in 2023 called LIMA: Less is More for Alignment[^4] which shows that what you really need is around 1000 samples to fine-tune a model for reasoning, and more than that you get diminishing returns. The second point and one of the reasons I'm using gemini for this experiment is that if you add your credit card information, you get 257$ in credits, which is more than enough for this experiment. 
 
 ## Implementation
 
 **Setting up the environment**
 
-I'm considering the data_generation part of the code its own pipeline, for it you need the following packages:
+I'm considering the data_generation part of the code it's own pipeline, for it you need the following packages:
 
 ```bash
 pip install google-genai==1.56.0 datasets tqdm python-dotenv
 ```
-Note: This doesn't take into account the analysis notebook, it has its needed installations at the first cell in the notebook.
-
 The only unique one here is the `google-genai==1.56.0` package, the rest you can find in the train environment. If you want you can add it to that environment.
 
 **Downloading the dataset**
@@ -172,11 +151,11 @@ logger.info(f"Final dataset size: {len(dataset)}")
 
 After the dataset has been loaded, filtered, and sliced, we save it to a jsonl file with the safe name where we replace any '/' with '_' and if `--suffix` parameter is provided we append it to the file name. For example if run the command `python data_generation/launch_generation.py --dataset gsm8k --file_suffix easy --limit 1000` it will download the gsm8k dataset, limit it to 1000 samples, and save it to a jsonl file named `gsm8k_easy.jsonl`
 
-The `auto_fill` and `auto_extend` parameters are there in case you are running the code again and either want to fill in the gaps for some corrupted samples, or extend the dataset to a larger size.
+The `auto_fill` and `auto_extend` parameters are there in case you are running the code again and either want to fill in the gap for some corrupted samples, or extend the dataset to a larger size.
 
 **Submitting Batch Job**
 
-Perfect, now that we have our dataset the next step would be to generate our chain of thought dataset. Given that we have a 1000 samples we want to run, it doesn't make sense to stream as this might take a long time and requires our constant supervision, plus any interruption might cause the job to fail and we will have to restart. It's also cheaper to use batch jobs which is always a plus.
+Perfect, now that we have our dataset the next step would be to generate our chain of thought dataset. Given that we have a 1000 samples we want to run, it doesn't make sense to stream as this might take a long time and requires our constant supervision, plus any interruption might causes the job to fail and we will have to restart. It's also cheaper to use batch jobs which is always a plus.
 
 For this, we will look at the [gemini batch api](https://ai.google.dev/gemini-api/docs/batch-api?batch=file) and we notice that it requires from us to submit a jsonl file with key as ID and a request object that contains the questions, and other configurations such as system instructions. 
 
@@ -186,9 +165,7 @@ We therefore create a jsonl file stored in a tmp directory with the following fo
 {"key": "req_7d1341a6677b", "request": {"contents": [{"parts": [{"text": "question_from_dataset"}]}], "systemInstruction": {"parts": [{"text": "system_instruction_from_prompts"}]}}}
 ```
 
-Where `question_from_dataset` is the question from the dataset and `system_instruction_from_prompts` is the system instruction from the `prompts.py` file. We use a modified version of the prompts from [^4], the reason is their prompts were too vague. We therefore created a more specific prompt that is more aligned with our task and allows for easier analysis. Feel free to adjust them as is necessary for your case. Link to [prompts.py](https://github.com/Hassan-Sarwat/efficient-speculative-decoding/blob/master/data_generation/prompts.py)
-
-If you dont want to look at the prompts, the main points is to write output into steps separated with `->`, and write the final answer after a `####` separator. There are other instructions and example specific to Draft/Thought but both share the same structure in the prompts.
+Where `question_from_dataset` is the question from the dataset and `system_instruction_from_prompts` is the system instruction from the `prompts.py` file. We use a modified version of the prompts from [^1], the reason is their prompts were too vague. We therefore created a more specific prompt that is more aligned with our task and allows for easier analysis. Feel free to adjust them as is necessary for your case.  
 
 After `launch_generation.py` creates the batch file it will submit a batch request. For our requests, we are using the `gemini-3-pro-preview` model in our experiments, it's not best practices to use a preview model as it might not be available in the future, but as of this moment the gemini-3 model has no available non preview alternatives in the [website](https://ai.google.dev/gemini-api/docs/models/). The code for submission and batch management with gemini can be found in `batch_client.py`.
 
@@ -215,7 +192,7 @@ Note: It is generally good practice to submit a small batch job (--limit 10) or 
 
 **Processing the results**
 
-Now that we've submitted our batch jobs, we need to wait for them and then download them. That's why we have `process_results.py` file. This file reads the tmp file we generate in `launch_generation.py` and checks the status of the corresponding batch job, whether it's finished or not. If it's done it downloads result as a jsonl and stores it in the data folder. The commands for processing results are as follows, They all need to be run individually and to check status of the jobs.
+Now that we've submitted our batch jobs, we need to wait for them and then download them. that's why we have `process_results.py` file. This file reads the tmp file we generate in `launch_generation.py` and checks the status of the corresponding batch job, whether it's finished or not. If it's done it downloads result as a jsonl and stores it in the data folder. The commands for processing results are as follows, They all need to be run individually and to check status of the jobs.
 
 For CoT Easy Difficulty
 ```bash
@@ -247,9 +224,7 @@ For CoD Hard Difficulty
 python data_generation/process_results.py --chain draft --dataset "qwedsacf/competition_math" --file_suffix "hard"
 ```
 
-These commands should check the status of the job and download them after they are finished. Personally it took me around 20 minutes after job submission to get my results, but the official gemini SLA for batch jobs is 24 hours, so your mileage may vary.
-
-Finally after all jobs are completed and downloaded we can analyze the data and verify that the format is correct and the results are as expected.
+Finally after all jobs are completed we can analyze the data and verify that the format is correct and the results are as expected.
 
 
 ## Analyzing the data
@@ -276,7 +251,7 @@ This part is a bit bigger. We need to make 2 validations, the first being that t
 
 Regarding the structure compliance this is easy to extract, we just check for an answer separator '####' and a step divider '->'.
 
-The answer being correct is more difficult, as this is a math dataset we will need to do some extraction, for example in gsm8k the answer shows up after a '####' separator but in MATH dataset the answer appears in \\boxed{}, so we will need to accommodate this. We also need to take into account small differences such as 990.00 and 990.
+The answer being correct is more difficult, as this is a math dataset we will need to do some extraction, for example in gsm8k the answer shows up after a '####' separator but in MATH dataset the answer appears in \\boxed{}, so we will need to accomodate this. We also need to take into account small differences such as 990.00 and 990.
 
 After running a quick analysis we get the following result:
 
@@ -291,12 +266,11 @@ After running a quick analysis we get the following result:
 
 
 **Data Cleaning**
-
 Now these results are unfortunately not the best and we will need to do some cleaning. Note that besides cleaning there are other steps you can take. 
 
-1. Extend to 1500 samples instead of 1000 samples, therefore you have wiggle room to accommodate the bad samples from the LLM and end up with correct amount.
+1. Extend to 1500 samples instead of 1000 samples, and use remainder
 2. Use LLM as a judge to make sure answers are semantically correct as there could be problems with extraction
-3. Pass non structurally compliant samples to LLM again to correct and make them structurally compliant.
+3. Pass non-structurally compliant samples to LLM again to correct and make them structurally compliant.
 
 In this blog we just assume that further usage of LLMs is limited and go about it the classical way, but just wanted to let you know that's an option.
 
@@ -311,7 +285,7 @@ First we look at the ones with no `->` and investigate why they happen. The Chai
 | "hard" | "cot" | 1000 | 1000 | 1000 | 1000 | 896 | 0 |
 | "hard" | "cod" | 1000 | 1000 | 998 | 950 | 898 | 7 |
 
-With this we notice a significant improvement, but we still have problem in the accuracy of the answers. Again we dive a bit deeper and we notice that some of the answers we have are not resolving due to a syntax difference, such as `\\frac{1}{2}` instead of `1/2` or `0.5`. We therefore create a helper function to resolve these issues, and our table changes to
+With this we notice a significant improvement, but we still have problem in the accuracy of the answers. Again we dive a bit deeper and we notice that some of the answers we have are not resolving due to a syntax difference, such as `\\frac{1}{2}` instead of `1/2` or `0.5`. We therefore create a helper function to resolve these issues our table changes to
 
 | Scenario | Dataset | Total Raw | Joined Count | Count (####) | Count (->) | Count (Correct) | No Steps & Incorrect |
 | :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- |
@@ -324,7 +298,7 @@ With this we notice a significant improvement, but we still have problem in the 
 
 We noticed a significant bump in accuracy in the hard scenario. We can try looking at more samples and getting better accuracy, however I'll stop here for now.
 
-Our next step will be to remove the samples that aren't compliant with the structure or are incorrect. After removing them we will slice down the bigger dataset in each scenario so that both Chain of Draft and Chain of Thought are the same in size.
+Our next step will be to remove the samples that aren't compliant with the structure or are incorrect. After removing them we will slice down the bigger dataset in each scenario so that both Chain of Draft and Chain of Thought are same in size.
 
 Achieving that this is our final result. 
 
@@ -334,46 +308,52 @@ Achieving that this is our final result.
 | medium | 899 | 3 | 902 |
 | hard | 888 | 2 | 890 |
 
-As you can see while there are unique samples, they are not enough to significantly impact the accuracy of the models. You might think that removing almost 10% of the samples in the hard scenario is a lot, but corrupt data will have worse impact for training. As mentioned in [^3], smaller more curated datasets are better for alignment than larger datasets with more corrupt data.
+As you can see while there are unique samples, they are not enough to significantly impact the accuracy of the models. You might think that removing almost 10% of the samples in the hard scenario is a lot, but corrupt data will have worse impact for training. As mentioned in [^4], smaller more curated datasets are better for alignment than larger datasets with more corrupt data.
 
 **Impact of Chain of Draft**
 
 So what was the impact on using chain of draft compared to chain of thought? From the table above we notice that there wasn't much impact on accuracy, with chain of draft staying within the 0.1% range of chain of thought.
 
-But what was the impact on token and step count? We need to visualize this, so we create a bar chart and show the median token usage per method, and the number of steps and number of characters, but only after removing the outliers, setting the upper bound as the *75% quantile + 1.5 * IQR* and the lower bound as the *25% quantile - 1.5 * IQR*, for non technical people *IQR* is the interquartile range, which is the difference between the 75th and 25th percentiles.
+But what was the impact on token and step count? We need to visualize this, so we create a bar chart and show the median token usage per method, and the number of steps and number of characters, but not after removing the outliers, setting the upper bound as the *75% quantile + 1.5 * IQR* and the lower bound as the *25% quantile - 1.5 * IQR*
 
 1. Token Usage
 
 <figure style="text-align: center;">
   <img src="https://github.com/Hassan-Sarwat/efficient-speculative-decoding/blob/master/data_generation/images/token_comparison_quartiles.png?raw=true" alt="Token Usage" width="85%">
-  <figcaption>From this image we observe that on chain of draft we get average 50% less tokens used than chain of thought.</figcaption>
+  <figcaption>From this image we observe that on chain of draft we get average 50% less tokens used than chain of thought.
 </figure>
 
 2. Steps
 
 <figure style="text-align: center;">
   <img src="https://github.com/Hassan-Sarwat/efficient-speculative-decoding/blob/master/data_generation/images/step_comparison_quartiles.png?raw=true" alt="Step Usage" width="85%">
-  <figcaption>From this image we observe that on chain of draft we get around 2 more steps than on chain of thought</figcaption>
+  <figcaption>From this image we observe that on chain of draft we get around 2 more steps than on chain of thought
 </figure>
 
 3. Characters
 
 <figure style="text-align: center;">
   <img src="https://github.com/Hassan-Sarwat/efficient-speculative-decoding/blob/master/data_generation/images/char_comparison_quartiles.png?raw=true" alt="Character Usage" width="85%">
-  <figcaption>The biggest drop, approximately 60% reduction compared to chain of thought.</figcaption>
+  <figcaption>The biggest drop, approximately 60% reduction compared to chain of thought.
 </figure>
 
 4. The reduction percentages
 
 <figure style="text-align: center;">
   <img src="https://github.com/Hassan-Sarwat/efficient-speculative-decoding/blob/master/data_generation/images/reduction_percentages.png?raw=true" alt="Reduction Percentages" width="85%">
-  <figcaption>The full reductions by percentages</figcaption>
+  <figcaption>The biggest drop, approximately 60% reduction compared to chain of thought.
 </figure>
+
+
 
 Perfect, now that we have our dataset and did the analysis and have a clear understanding, we can finally start training. Let's see how it goes in the next blog post.
 
+
+
+
 ## References
-[^1]:[Training Verifiers to Solve Math Word Problems](https://arxiv.org/abs/2110.14168)
-[^2]:[Measuring Mathematical Problem Solving with MATH Dataset](https://arxiv.org/pdf/2103.03874)
-[^3]:[LIMA: Less is More for Alignment](https://arxiv.org/pdf/2305.11206)
-[^4]:[Chain of Draft: Thinking Faster by Writing Less](https://arxiv.org/pdf/2502.18600)
+[^1]:[Chain of Draft: Thinking Faster by Writing Less](https://arxiv.org/pdf/2502.18600)
+[^2]:[Training Verifiers to Solve Math Word Problems](https://arxiv.org/abs/2110.14168)
+[^3]:[Measuring Mathematical Problem Solving with MATH Dataset](https://arxiv.org/pdf/2103.03874)
+[^4]:[LIMA: Less is More for Alignment](https://arxiv.org/pdf/2305.11206)
+

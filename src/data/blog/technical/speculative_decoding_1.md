@@ -18,7 +18,7 @@ description:
 
 ### Why I started this series
 
-I have recently finished my master's degree at TUM, and seeing that I'm unemployed (at the time of writing this blog, if this is not crossed out or deleted feel free to send me opportunities) and with more free time on my hand I've decided to explore and enhance my knowledge, and also satiate my curiosity and desire to continously know things so I can pretend to be better than everyone else by throwing around esoteric terminologies.
+I have recently finished my master's degree at TUM, however learning is an eternal journey, so it's good to dedicate some free time to it, and what better way to do it than by building and working on projects.
 
 Recently I was reading up on fine-tuning models and their deployments, and I realized that while I do know a decent amount about fine-tuning LLMs and the different shortcuts you can take, from few shot prompting to parameter efficient fine tuning methods such as quantization or low rank adapters, I don't really know a lot about inference. 
 
@@ -33,7 +33,7 @@ My thought process was as follows, *if people have sped up and improved LLM trai
 
 So I searched, and checked what methods are there for me to employ and how can I speed up inference, this is where I found speculative decoding[^1], and the further improvements such as Medusa[^2] and EAGLE[^3], with EAGLE-3[^4] currently being SOTA for inference improvements. 
 
-Nevertheless I decided to go with speculative decoding, mainly due to the model agnosticism and freedom provided versus the being limited to a selection of models if I decided to go with the other methods, maybe later in the series I'll talk about them and their implementation but for now we start with Speculative Decoding. So.
+Nevertheless I decided to go with speculative decoding, mainly due to the model agnosticism and freedom provided versus the being limited to a selection of models if I decided to go with the other methods, maybe later in the series I'll talk about them and their implementation but for now we start with Speculative Decoding. 
 
 ### What is Speculative Decoding?
 
@@ -90,7 +90,7 @@ $$
 
 So the best way to minimize the $Time_{spec}$ is to minimize the $Cost_{step}$, which can be achieved by having smaller draft models and to maximize the $E[\text{tokens}]$, which can be achieved by either higher acceptance rate and/or predicting more tokens
 
-This was just a brief introduction to the math of speculative decoding, if you are interested in reading more and maths is your thing, I've attached the references at the bottom, this is probably the deepest I'll dive into the maths in this series but I am also open to requests, just contact and ask and I'll be happy to give an explanation.
+This was just a brief introduction to the math of speculative decoding, if you are interested in reading more and maths is your thing, I've attached the references at the bottom. This is probably the deepest I'll dive into the maths in this series but I am also open to requests, just contact and ask and I'll be happy to give an explanation.
 
 ### What do we want to do
 
@@ -105,9 +105,9 @@ As always when starting a project you need to check if someone had a similar ide
 * Speculative decoding will reduce our inference time without affecting accuracy
 * Chain of draft will reduce our total tokens with only minimal effect on accuracy
 
-The first two hypotheses are self explanatory, the third hypothesis needs a bit more clarification. How do we define chain of draft, a summary is not exact enough for our very scientific brains. In this experiment our definition will be as follows. **A chain of draft is a reasoning method that strips away conversational filler while maintaining state knowledge.**
+The first two hypotheses are self explanatory, the third hypothesis needs a bit more clarification. How do we define chain of draft, a summary is not exact enough for our very scientific brains. In this experiment our definition will be as follows. **A chain of draft must be 3-5 steps where each step has a maximum of 5 words.**
 
-Why did we pick this definition, what is the reason behind it? First, chain of thought includes a lot of rambling, more rambling means more tokens and more tokens mean slower speed. The second reason is because when doing speculative decoding, we want the target model to accept the tokens of the draft model, and the longer the sequences of tokens the higher chance of divergence and therefore more rejections from the main model. By removing the filler and only keeping the relevant and important knowledge, we hypothesize that this will increase the chance of alignment.
+Why did we pick this definition, what is the reason behind it? First, chain of thought includes a lot of rambling, more rambling means more tokens and more tokens mean slower speed. The second reason is because when doing speculative decoding, we want the target model to accept the tokens of the draft model, and the longer the sequences of tokens the higher chance of divergence and therefore more rejections from the main model.
 
 
 <figure style="text-align: center;">
